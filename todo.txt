@@ -1,0 +1,7 @@
+March-17
+-create visitors table
+-make relationship with urls table
+
+March-18
+-Refactor previous code
+-use authentication and make secure all pages .
