@@ -17,7 +17,7 @@ class Url extends Model
         'title',
     ];
 
-    public function visitors():HasMany{
+    public function visitor():HasMany{
         return $this->hasMany(Visitor::class);
     }
     public function user(){

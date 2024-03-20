@@ -30,15 +30,18 @@ Route::controller(FrontendController::class)->group(function () {
 });
 
 Route::controller(UrlController::class)->group(function () {
+    Route::middleware('auth')->group(function (){
     Route::prefix('/admin',)->group(function () {
     Route::get('/dashboard','dashboard')->name('dashboard');
-    Route::get('/url/index', 'index')->name('admin.url.index')->middleware('auth');
+    Route::get('/url/index', 'index')->name('admin.url.index');
     Route::get('/url/create', 'create')->name('admin.url.create');
     Route::post('/url/create', 'storeBackend')->name('admin.url.store');
+    Route::get('/url/{id}/view', 'view')->name('admin.url.view');
     Route::get('/url/{id}/edit', 'edit')->name('admin.url.update');
     Route::post('/url/{id}/edit', 'update');
     Route::post('/url/{id}/delete', 'destroy')->name('admin.url.destroy');
     Route::get('/{short_url}','redirect');
+});
 });
 });
 

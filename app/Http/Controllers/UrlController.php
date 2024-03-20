@@ -17,6 +17,7 @@ class UrlController extends Controller
     }
     public function index()
     {
+        //get url create by currently authenticated user
         $urls = auth()->user()->url;
         return view('Backend.Links.index', compact('urls'));
     }
@@ -44,18 +45,30 @@ class UrlController extends Controller
             $url->user()->associate(Auth::user());
         }
         $url->save();
-        return redirect(route('admin.url.index'));
+        return redirect(route('admin.url.index'))->with('success','Created Successfully ');
     }
 
     public function edit($id)
     {
+        //its check the currently authenticate user id and request id ,if match its provide accessablity for edit ,otherwise generate error message
+        // $user_id=auth()->id();
+        // $query= Url::where('user_id',$user_id)
+        // ->where('id',$id)->first();
+        // if(!$query){
+        //  abort(401);
+        // }
         $url = Url::findOrFail($id);
+        if ($url->user_id != auth()->id()) {
+            abort(401);
+        }
         return view('Backend.Links.edit', compact('url'));
     }
     public function update(Request $request, $id)
     {
         $url = Url::findOrFail($id);
-
+        if ($url->user_id != auth()->id()) {
+            abort(401);
+        }
         $request->validate([
             'backend_url' => 'required|url|max:2048',
             'title' => 'nullable|string',
@@ -71,9 +84,17 @@ class UrlController extends Controller
         $url->short_url = $shortCode;
         $url->title = $title;
         $url->save();
-        return redirect()->route('admin.url.index');
+        return redirect()->route('admin.url.index')->with('success','Updated Successfully');
     }
 
+    public function view($id)
+    {
+        $url = Url::findOrFail($id);
+        if ($url->user_id != auth()->id()) {
+            abort(401);
+        }
+        return view('Backend.Links.view', compact('url'));
+    }
 
     public function redirect(Request $request, $short_url)
     {
@@ -93,6 +114,9 @@ class UrlController extends Controller
     public function destroy($id)
     {
         $url = Url::findOrFail($id);
+        if ($url->user_id != auth()->id()) {
+            abort(401);
+        }
         $url->delete();
         return redirect(route('admin.url.index'));
     }

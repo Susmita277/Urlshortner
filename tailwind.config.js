@@ -13,7 +13,7 @@ export default {
         extend: {
             colors: {
                 'primary-color': '#189cbc',
-                'body-color': '#f7f7f7',
+                'body-color': '#f4f6fa',
                 'danger-color': '#ff3366',
                 'success-color': '#05a34a',
                 'dark-text-color': '#a5a5a5',

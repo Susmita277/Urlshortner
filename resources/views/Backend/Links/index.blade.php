@@ -2,6 +2,11 @@
 @section('content')
     @if ($urls->isNotEmpty())
         <div class=" bg-body-color h-full p-10 ">
+            @if (session('success'))
+                <div class="alert text-success-color">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="border-b-2 py-4">
                 <h1 class="text-3xl font-bold">Links</h1>
                 <div class="flex gap-6 mt-4">
@@ -26,7 +31,7 @@
                         {{-- here refers formatted character --}}
                         <p class="mt-10 text-base text-dark-text-color">{{ $url->created_at->format('Y-F-d') }}</p>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex gap-2">
                         <button type="button" class=" outline-none bg-[#f1f0f7] px-2 w-[80px] rounded-sm h-8">
                             <i class="fa-regular fa-copy pr-2"></i>Copy
                         </button>
@@ -34,6 +39,12 @@
                             <button type="button"
                                 class="outline-none items-center rounded-md border-2 border-secondary-color px-2 w-[35px] h-8">
                                 <i class="fa-sharp fa-regular fa-pen"></i>
+                            </button>
+                        </a>
+                        <a href="{{ route('admin.url.view', ['id' => $url->id]) }}">
+                            <button type="button"
+                                class="outline-none items-center rounded-md border-2 border-secondary-color px-2 w-[35px] h-8">
+                                <i class="fa-sharp fa-regular fa-eye"></i>
                             </button>
                         </a>
                         <form action="{{ route('admin.url.destroy', ['id' => $url->id]) }}" method="POST">
