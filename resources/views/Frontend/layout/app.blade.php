@@ -37,8 +37,8 @@
         </div>
         <div>
             <ul class="flex justify-between items-center">
-                <li class="text-base font-bold  px-4 text-primary-color"><a href="{{route('home.login')}}">LOGIN</a></li>
-                <li><a href="{{route('home.register')}}"><button
+                <li class="text-base font-bold  px-4 text-primary-color"><a href="{{route('user.login')}}">LOGIN</a></li>
+                <li><a href="{{route('user.register')}}"><button
                             class="px-4 py-2 bg-primary-color rounded-sm text-white text-base">Register</button></a>
                 </li>
             </ul>

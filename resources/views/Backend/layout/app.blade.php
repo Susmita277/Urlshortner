@@ -77,6 +77,8 @@
                                     class="rounded-sm px-5 py-2 outline-none border-none font-bold text-base opacity-[60%]">Sign
                                     Out</button>
                             </form>
+                            <a href="{{route('user.profile')}}"><button
+                            class="rounded-sm px-5 py-2 outline-none border-none font-bold text-base opacity-[60%]">Update profile</button></a>
                         </div>
                     </div>
                 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUrlRequest;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +17,7 @@ class FrontendController extends Controller
         return view('Frontend.url_create');
     }
 
-    public function store(Request $request)
+    public function store(CreateUrlRequest $request)
     {
         $request->validate([
             'original_url' => 'required|url|max:2048',

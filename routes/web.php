@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\AutheticationController;
+use App\Http\Controllers\UpdateProfile;
 use App\Http\Controllers\UrlController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,12 +18,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::controller(AutheticationController::class)->group(function () {
-    Route::get('/register', 'register')->name('home.register');
+    Route::get('/register', 'register')->name('user.register');
     Route::post('/register', 'registerUser');
-    Route::get('/login',  'login')->name('home.login');
+    Route::get('/login',  'login')->name('user.login');
     Route::post('/login',  'loginUser');
     Route::post('/user/logout', 'logoutUser')->name('logout');
 });
+Route::controller(UpdateProfile::class)->group(function () {
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile',  'profile')->name('user.profile');
+        Route::post('/profile',  'update_profile');
+    });
+});
+
 
 Route::controller(FrontendController::class)->group(function () {
     Route::get('/url/create', 'create')->name('url.create');
@@ -30,18 +38,17 @@ Route::controller(FrontendController::class)->group(function () {
 });
 
 Route::controller(UrlController::class)->group(function () {
-    Route::middleware('auth')->group(function (){
-    Route::prefix('/admin',)->group(function () {
-    Route::get('/dashboard','dashboard')->name('dashboard');
-    Route::get('/url/index', 'index')->name('admin.url.index');
-    Route::get('/url/create', 'create')->name('admin.url.create');
-    Route::post('/url/create', 'storeBackend')->name('admin.url.store');
-    Route::get('/url/{id}/view', 'view')->name('admin.url.view');
-    Route::get('/url/{id}/edit', 'edit')->name('admin.url.update');
-    Route::post('/url/{id}/edit', 'update');
-    Route::post('/url/{id}/delete', 'destroy')->name('admin.url.destroy');
-    Route::get('/{short_url}','redirect');
+    Route::middleware('auth')->group(function () {
+        Route::prefix('/admin',)->group(function () {
+            Route::get('/dashboard', 'dashboard')->name('dashboard');
+            Route::get('/url/index', 'index')->name('admin.url.index');
+            Route::get('/url/create', 'create')->name('admin.url.create');
+            Route::post('/url/create', 'storeBackend')->name('admin.url.store');
+            Route::get('/url/{id}/view', 'view')->name('admin.url.view');
+            Route::get('/url/{id}/edit', 'edit')->name('admin.url.update');
+            Route::post('/url/{id}/edit', 'update');
+            Route::post('/url/{id}/delete', 'destroy')->name('admin.url.destroy');
+            Route::get('/{short_url}', 'redirect');
+        });
+    });
 });
-});
-});
-

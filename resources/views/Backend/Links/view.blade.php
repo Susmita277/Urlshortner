@@ -24,16 +24,21 @@
                         <th class=" py-3  px-3 border-l opacity-70">USER AGENT</th>
                     </tr>
                 </thead>
-                <tbody class=" text-sm ">
-                    @foreach ($url->visitor as $visitor)
-                        <tr class=" border ">
-                            <td class="py-3 px-3 border-l">{{ $loop->iteration}}</td>
+                <tbody class="text-sm">
+                    @forelse ($url->visitor as $visitor)
+                        <tr class="border">
+                            <td class="py-3 px-3 border-l">{{ $loop->iteration }}</td>
                             <td class="py-3 px-3 border-l">{{ $visitor->ip }}</td>
                             <td class="py-3 px-3 border-l">{{ $visitor->user_agent }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                            <td class="flex justify-center">
+                                <h1 class="pl-40 py-2 text-base ">No <span class="text-danger-color px-1">Records</span>Found</h1>
+                            </td>
+                    @endforelse
                 </tbody>
             </table>
+
         </div>
     </div>
 @endsection

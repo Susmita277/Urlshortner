@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateUrlRequest;
+use App\Http\Requests\UpdateUrlRequest;
 use App\Models\Url;
 use App\Models\Visitor;
 use Illuminate\Support\Str;
@@ -26,12 +28,12 @@ class UrlController extends Controller
     {
         return view('Backend.Links.create');
     }
-    public function storeBackend(Request $request)
+    public function storeBackend(CreateUrlRequest $request)
     {
-        $request->validate([
-            'backend_url' => 'required|url|max:2048',
-            'title' => 'nullable|string',
-        ]);
+        // $request->validate([
+        //     'backend_url' => 'required|url|max:2048',
+        //     'title' => 'nullable|string',
+        // ]);
         $originalUrl = $request->input('backend_url');
         $shortCode = Str::random(8);
         $urlParts = parse_url($originalUrl);
@@ -63,16 +65,16 @@ class UrlController extends Controller
         }
         return view('Backend.Links.edit', compact('url'));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateUrlRequest $request, $id)
     {
-        $url = Url::findOrFail($id);
-        if ($url->user_id != auth()->id()) {
-            abort(401);
-        }
         $request->validate([
             'backend_url' => 'required|url|max:2048',
             'title' => 'nullable|string',
         ]);
+        $url = Url::findOrFail($id);
+        if ($url->user_id != auth()->id()) {
+            abort(401);
+        }
 
         $originalUrl = $request->input('backend_url');
         $shortCode = Str::random(8);
@@ -102,7 +104,9 @@ class UrlController extends Controller
         $url = Url::where('short_url', $short_url)->first();
         if ($url) {
             //record ip and useragent
+             $url_id=auth()->user()->id;
             Visitor::create([
+                'url_id'=>$url_id,
                 'ip' => $request->ip(),
                 'user_agent' => $request->userAgent()
             ]);

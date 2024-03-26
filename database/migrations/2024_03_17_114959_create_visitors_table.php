@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('ip');
             $table->string('user_agent');
-            $table->foreignId('url_id')->nullable()->references('id')->on('urls');
+            $table->foreignId('url_id')->references('id')->on('urls')->nullable();
             $table->timestamps();
         });
 

@@ -33,7 +33,7 @@ class AutheticationController extends Controller
         $registerUser->save();
 
         if ($registerUser) {
-            return redirect(route('home.login'))->with('successfully', 'submitted');
+            return redirect(route('user.login'))->with('successfully', 'submitted');
         } else {
             return back()->with('fail', 'Something went wrong');
         }
@@ -66,4 +66,5 @@ class AutheticationController extends Controller
         Auth::logout();
         return redirect()->route('url.create');
     }
+
 }
