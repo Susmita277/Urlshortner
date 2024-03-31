@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 
 class Url extends Model
 {
@@ -16,6 +17,17 @@ class Url extends Model
         'short_url',
         'title',
     ];
+
+    public static function boot(){
+        parent::boot();
+        static::creating(function ($item){
+          Log::info('Creating event call:' . $item);
+        });
+
+        static::created(function ($item){
+            Log::info('Created the record:' . $item);
+          });
+    }
 
     public function visitor():HasMany{
         return $this->hasMany(Visitor::class);

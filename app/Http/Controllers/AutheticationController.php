@@ -54,7 +54,7 @@ class AutheticationController extends Controller
         }
         // auth credential accept boolean value its check if the user provided data exist in database
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('urls');
+            return redirect(route('admin.url.index'));
         }
         RateLimiter::hit($key, $lockoutseconds);
 

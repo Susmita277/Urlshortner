@@ -57,6 +57,7 @@
                     </div>
                 </div>
             @endforeach
+             <div class=" py-10">{{$urls->links() }}</div>
             <div class="flex  items-center justify-center font-semibold opacity-90 text-base mt-24">
                 <p><i class="fa-sharp fa-solid fa-dash"></i> You've reached the end of your link<i
                         class="fa-sharp fa-solid fa-dash"></i> </p>

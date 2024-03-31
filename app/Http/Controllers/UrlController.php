@@ -10,6 +10,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL as FacadesURL;
+use App\Events\UrlCreation;
+use App\Mail\UrlCreatedMail;
+use Illuminate\Support\Facades\Mail;
+
 
 class UrlController extends Controller
 {
@@ -20,8 +25,10 @@ class UrlController extends Controller
     public function index()
     {
         //get url create by currently authenticated user
-        $urls = auth()->user()->url;
-        return view('Backend.Links.index', compact('urls'));
+        $user_id = auth()->id();
+        $urls= Url::where('user_id',$user_id)->paginate(5);
+        $count =Url::where('user_id',$user_id)->count();
+        return view('Backend.Links.index', compact('urls','count'));
     }
 
     public function create()
@@ -47,6 +54,8 @@ class UrlController extends Controller
             $url->user()->associate(Auth::user());
         }
         $url->save();
+        Mail::to(auth()->user())->send(new UrlCreatedMail);
+        UrlCreation::dispatch($url);
         return redirect(route('admin.url.index'))->with('success','Created Successfully ');
     }
 
