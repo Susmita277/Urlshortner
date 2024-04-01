@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL as FacadesURL;
 use App\Events\UrlCreation;
 use App\Mail\UrlCreatedMail;
+use App\Mail\UrlCreatedMarkdownMail;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Cache;
 
 class UrlController extends Controller
 {
@@ -23,10 +24,14 @@ class UrlController extends Controller
         return view('Backend.dashboard');
     }
     public function index()
-    {
-        //get url create by currently authenticated user
-        $user_id = auth()->id();
-        $urls= Url::where('user_id',$user_id)->paginate(5);
+
+    {    $user_id= auth()->id();
+         $urls= Cache::remember('urls', 600, function () use ($user_id) {
+            return Url::where('user_id', $user_id)->paginate(5);
+         });
+        //   Cache::forget('urls');
+        //   return $value;
+        // $urls=Url::where('user_id',$user_id)->paginate(5);
         $count =Url::where('user_id',$user_id)->count();
         return view('Backend.Links.index', compact('urls','count'));
     }
@@ -54,7 +59,9 @@ class UrlController extends Controller
             $url->user()->associate(Auth::user());
         }
         $url->save();
-        Mail::to(auth()->user())->send(new UrlCreatedMail);
+        // Mail::to(auth()->user())->send(new UrlCreatedMail);
+        $user= auth()->user();
+        Mail::to($user)->send(new UrlCreatedMarkdownMail($url));
         UrlCreation::dispatch($url);
         return redirect(route('admin.url.index'))->with('success','Created Successfully ');
     }
@@ -95,6 +102,7 @@ class UrlController extends Controller
         $url->short_url = $shortCode;
         $url->title = $title;
         $url->save();
+        Cache::forget('urls');
         return redirect()->route('admin.url.index')->with('success','Updated Successfully');
     }
 
@@ -131,6 +139,7 @@ class UrlController extends Controller
             abort(401);
         }
         $url->delete();
+        Cache::forget('urls');
         return redirect(route('admin.url.index'));
     }
 }
