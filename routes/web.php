@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\AutheticationController;
+use App\Http\Controllers\HttpController;
 use App\Http\Controllers\UpdateProfile;
 use App\Http\Controllers\UrlController;
 use Illuminate\Support\Facades\Route;
@@ -52,3 +53,7 @@ Route::controller(UrlController::class)->group(function () {
         });
     });
 });
+
+//test http client
+Route::get('/http',[HttpController::class,'index']);
+Route::post('/http',[HttpController::class,'post_request']);

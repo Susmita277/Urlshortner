@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL as FacadesURL;
 use App\Events\UrlCreation;
+use App\Jobs\UrlCreatedSendMailJob;
 use App\Mail\UrlCreatedMail;
 use App\Mail\UrlCreatedMarkdownMail;
 use Illuminate\Support\Facades\Mail;
@@ -60,9 +61,9 @@ class UrlController extends Controller
         }
         $url->save();
         // Mail::to(auth()->user())->send(new UrlCreatedMail);
-        $user= auth()->user();
-        Mail::to($user)->send(new UrlCreatedMarkdownMail($url));
-        UrlCreation::dispatch($url);
+        $user = auth()->user();
+        // UrlCreation::dispatch($url);
+        UrlCreatedSendMailJob::dispatch($user,$url);
         return redirect(route('admin.url.index'))->with('success','Created Successfully ');
     }
 
